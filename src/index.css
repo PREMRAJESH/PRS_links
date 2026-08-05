@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');
+@import 'tailwindcss';
+
+:root {
+  --background: #05070f;
+  --foreground: #eef1fb;
+  --card: rgba(19, 24, 44, 0.55);
+  --card-foreground: #eef1fb;
+  --primary: #a9b6ff;
+  --primary-foreground: #0a0d1a;
+  --secondary: rgba(255, 255, 255, 0.06);
+  --secondary-foreground: #d5dbf2;
+  --muted: rgba(255, 255, 255, 0.04);
+  --muted-foreground: #8e97b8;
+  --accent: #7de0d0;
+  --accent-foreground: #04140f;
+  --border: rgba(173, 186, 255, 0.14);
+  --ring: #8b9dff;
+  --radius: 18px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-card: var(--radius);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-feature-settings: 'ss01', 'cv01';
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 35%, transparent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Scrollbars stay hidden until the surface is actually being scrolled. */
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.scrolling {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(169, 182, 255, 0.35) transparent;
+}
+.scrolling::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrolling::-webkit-scrollbar-thumb {
+  background: rgba(169, 182, 255, 0.35);
+  border-radius: 999px;
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-6%, 0, 0) scale(1.1) rotate(-2deg);
+  }
+  50% {
+    transform: translate3d(6%, -3%, 0) scale(1.25) rotate(3deg);
+  }
+  100% {
+    transform: translate3d(-6%, 0, 0) scale(1.1) rotate(-2deg);
+  }
+}
+
+@keyframes fog-slide {
+  from {
+    transform: translate3d(-25%, 0, 0);
+  }
+  to {
+    transform: translate3d(25%, 0, 0);
+  }
+}
+
+@keyframes halo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
