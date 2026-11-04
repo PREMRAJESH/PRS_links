@@ -1,9 +1,10 @@
-import { ArrowUpRight, AtSign, ChevronRight, Globe, GraduationCap, Mail, Play, Sparkles, X as CloseIcon } from 'lucide-react'
-import { useEffect, useState, type ComponentType } from 'react'
+import { ArrowUpRight, ChevronRight, GraduationCap, Play, Sparkles, X as CloseIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { site } from '../data/site'
 import { mostVisitedCard, track } from '../lib/analytics'
 import directorsGhostImage from '../assets/directors-ghost.png'
 import { GlassPanel, Reveal, SectionLabel, TrackedLink } from './primitives'
+import { SOCIAL_ICONS } from './icons'
 import { useReducedMotion } from 'motion/react'
 
 /** Helper to extract YouTube video ID from standard URLs or youtu.be shortlinks */
@@ -29,7 +30,7 @@ export function FeaturedVideo() {
   return (
     <section
       aria-labelledby="featured-video-title"
-      className="relative mb-8"
+      className="relative mb-8 min-w-0 max-w-full"
     >
       <SectionLabel>
         <span id="featured-video-heading">Featured video</span>
@@ -172,7 +173,7 @@ export function FeaturedVideo() {
 
 export function Collections() {
   return (
-    <section aria-labelledby="collections-heading" className="space-y-6">
+    <section aria-labelledby="collections-heading" className="space-y-6 min-w-0 max-w-full">
       <SectionLabel>
         <span id="collections-heading">Microsoft Learn collections</span>
       </SectionLabel>
@@ -289,48 +290,12 @@ export function Collections() {
 
 /* ── 06 Social ───────────────────────────────────────────────── */
 
-/** Brand marks are hand-inlined — lucide dropped brand icons in v1. */
-function Brand({ className, path }: { className?: string; path: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
-      <path d={path} />
-    </svg>
-  )
-}
-
-const BRAND_PATHS = {
-  x: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z',
-  github:
-    'M12 2C6.475 2 2 6.475 2 12a9.994 9.994 0 0 0 6.838 9.488c.5.087.687-.213.687-.476 0-.237-.013-1.024-.013-1.862-2.512.463-3.15-.612-3.35-1.175-.113-.288-.6-1.175-1.025-1.413-.35-.187-.85-.65-.013-.662.788-.013 1.35.725 1.538 1.025.9 1.512 2.337 1.087 2.912.825.088-.65.35-1.075.638-1.325-2.225-.25-3.65-1.125-3.65-3.85 0-.788.275-1.45.725-1.963-.062-.187-.325-.975.075-2.025 0 0 .613-.187 2.013.75a6.855 6.855 0 0 1 1.837-.25c.625 0 1.25.087 1.838.25 1.4-.95 2.012-.75 2.012-.75.4 1.05.138 1.838.075 2.025.45.513.725 1.163.725 1.963 0 2.737-1.437 3.6-3.662 3.85.4.35.65 1.087.65 1.837 0 1.325-.013 2.35-.013 2.687 0 .263.188.575.688.475A10.005 10.005 0 0 0 22 12c0-5.525-4.475-10-10-10Z',
-  instagram:
-    'M12 2.163c3.204 0 3.584.012 4.85.07 1.17.053 1.805.249 2.227.415.56.217.96.477 1.382.899.421.421.682.82.899 1.381.164.422.36 1.057.413 2.227.059 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.053 1.17-.249 1.805-.413 2.227-.217.56-.478.96-.9 1.382-.421.421-.82.682-1.381.899-.422.164-1.057.36-2.227.413-1.266.059-1.646.07-4.85.07s-3.584-.011-4.85-.07c-1.17-.053-1.805-.249-2.227-.413a3.719 3.719 0 0 1-1.382-.9c-.421-.421-.682-.82-.898-1.381-.165-.422-.361-1.057-.414-2.227-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.053-1.17.249-1.805.414-2.227.216-.56.477-.96.898-1.382.422-.421.821-.682 1.382-.898.422-.165 1.057-.361 2.227-.414 1.266-.058 1.646-.07 4.85-.07Zm0 5.675a4.162 4.162 0 1 0 0 8.324 4.162 4.162 0 0 0 0-8.324Zm0 6.865a2.703 2.703 0 1 1 0-5.406 2.703 2.703 0 0 1 0 5.406Zm5.299-7.03a.972.972 0 1 1-1.944 0 .972.972 0 0 1 1.944 0Z',
-  youtube:
-    'M23.5 6.507a2.78 2.78 0 0 0-1.957-1.964C19.8 4.073 12 4.073 12 4.073s-7.8 0-9.543.47A2.78 2.78 0 0 0 .5 6.507C.03 8.256.03 12 .03 12s0 3.744.47 5.493a2.78 2.78 0 0 0 1.957 1.964c1.743.47 9.543.47 9.543.47s7.8 0 9.543-.47a2.78 2.78 0 0 0 1.957-1.964c.47-1.749.47-5.493.47-5.493s0-3.744-.47-5.493ZM9.545 15.568V8.432L15.727 12l-6.182 3.568Z',
-  linkedin:
-    'M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.84a1.63 1.63 0 1 0 0 3.26 1.63 1.63 0 0 0 0-3.26Z',
-} as const
-
-const brand = (path: string): ComponentType<{ className?: string }> =>
-  ({ className }) => <Brand className={className} path={path} />
-
-const ICONS: Record<string, ComponentType<{ className?: string }>> = {
-  github: brand(BRAND_PATHS.github),
-  linkedin: brand(BRAND_PATHS.linkedin),
-  globe: Globe,
-  instagram: brand(BRAND_PATHS.instagram),
-  youtube: brand(BRAND_PATHS.youtube),
-  mail: Mail,
-  at: AtSign,
-  graduation: GraduationCap,
-  x: brand(BRAND_PATHS.x),
-}
-
 export function Social() {
   const [topCard, setTopCard] = useState<string | null>(null)
   useEffect(() => setTopCard(mostVisitedCard()), [])
 
   return (
-    <section aria-labelledby="social-heading">
+    <section aria-labelledby="social-heading" className="min-w-0 max-w-full">
       <SectionLabel>
         <span id="social-heading">Connect with me</span>
       </SectionLabel>
@@ -339,7 +304,7 @@ export function Social() {
       <div className="hidden sm:block">
         <GlassPanel className="divide-y divide-[rgba(173,186,255,0.1)]">
           {site.socials.map((social, i) => {
-            const Icon = ICONS[social.icon] ?? Globe
+            const Icon = SOCIAL_ICONS[social.icon] ?? SOCIAL_ICONS.globe
             const cardKey = `social:${social.label}`
             return (
               <Reveal key={social.label} delay={i * 0.035}>
@@ -372,7 +337,7 @@ export function Social() {
       {/* Mobile Layout: Linktree-style compact rounded rectangles */}
       <div className="block sm:hidden space-y-2.5">
         {site.socials.map((social, i) => {
-          const Icon = ICONS[social.icon] ?? Globe
+          const Icon = SOCIAL_ICONS[social.icon] ?? SOCIAL_ICONS.globe
           const cardKey = `social:${social.label}`
           return (
             <Reveal key={social.label} delay={i * 0.035}>

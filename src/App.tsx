@@ -33,19 +33,19 @@ export default function App() {
         Skip to content
       </a>
 
-      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-[1400px] min-w-0 overflow-hidden px-4 sm:px-8 lg:px-12">
         {/* Asymmetric split: hero on the left, interactive showcase on the right */}
         <main
           id="hub"
-          className="grid gap-10 py-6 sm:gap-14 sm:py-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)] lg:gap-16 xl:gap-24"
+          className="grid min-w-0 max-w-full gap-8 py-5 sm:gap-14 sm:py-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)] lg:gap-16 xl:gap-24"
         >
-          <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-start lg:pt-8 lg:pb-10">
-            <Reveal>
+          <div className="min-w-0 max-w-full lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-start lg:pt-8 lg:pb-10">
+            <Reveal className="min-w-0 w-full">
               <Hero />
             </Reveal>
           </div>
 
-          <div className="flex flex-col gap-10 sm:gap-12 lg:py-14">
+          <div className="flex min-w-0 max-w-full flex-col gap-10 sm:gap-12 lg:py-14">
             <div>
               <Reveal delay={0.05}>
                 <FeaturedVideo />

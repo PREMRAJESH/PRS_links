@@ -62,19 +62,9 @@ export const site = {
    */
   socials: [
     {
-      label: 'Portfolio',
-      href: 'https://prs-os.vercel.app/',
-      icon: 'globe',
-    },
-    {
-      label: 'GitHub',
-      href: 'https://github.com/PREMRAJESH',
-      icon: 'github',
-    },
-    {
-      label: 'LinkedIn',
-      href: 'https://www.linkedin.com/in/prem-rajesh-sargara',
-      icon: 'linkedin',
+      label: 'Instagram',
+      href: 'https://www.instagram.com/_prem_sargara/',
+      icon: 'instagram',
     },
     {
       label: 'YouTube',
@@ -82,19 +72,29 @@ export const site = {
       icon: 'youtube',
     },
     {
-      label: 'Instagram',
-      href: 'https://www.instagram.com/_prem_sargara/',
-      icon: 'instagram',
-    },
-    {
       label: 'X',
       href: 'https://x.com/sargara_prem',
       icon: 'x',
     },
     {
+      label: 'GitHub',
+      href: 'https://github.com/PREMRAJESH',
+      icon: 'github',
+    },
+    {
       label: 'Threads',
       href: 'https://www.threads.com/@_prem_sargara',
-      icon: 'at',
+      icon: 'threads',
+    },
+    {
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/in/prem-rajesh-sargara',
+      icon: 'linkedin',
+    },
+    {
+      label: 'Portfolio',
+      href: 'https://premsargara.me',
+      icon: 'globe',
     },
     {
       label: 'Email',
