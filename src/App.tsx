@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import Atmosphere from './components/Atmosphere'
 import Hero from './components/Hero'
-import { Certifications, Collections, Learning, Projects, Social } from './components/Sections'
+import { Collections, FeaturedVideo, Social } from './components/Sections'
 import { Reveal } from './components/primitives'
-import { site } from './data/site'
 import { initSessionTracking } from './lib/analytics'
 
 export default function App() {
@@ -34,50 +33,40 @@ export default function App() {
         Skip to content
       </a>
 
-      <div className="mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12">
-        {/* Asymmetric split: hero holds still on the left, the dossier scrolls. */}
+      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8 lg:px-12">
+        {/* Asymmetric split: hero on the left, interactive showcase on the right */}
         <main
           id="hub"
-          className="grid gap-14 py-14 sm:py-20 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)] lg:gap-16 xl:gap-24"
+          className="grid gap-10 py-6 sm:gap-14 sm:py-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)] lg:gap-16 xl:gap-24"
         >
-          <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-center lg:py-16">
+          <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-start lg:pt-8 lg:pb-10">
             <Reveal>
               <Hero />
             </Reveal>
           </div>
 
-          {/*
-            Mobile reads roadmap → links → work → collections → credentials, so a
-            visitor arriving from a bio reaches the links in one thumb scroll.
-            Desktop keeps the editorial order, with links closing the column.
-          */}
-          <div className="flex flex-col gap-14 lg:py-24">
-            <div className="order-1 lg:order-5">
-              <Social />
-            </div>
-            <div className="order-2 lg:order-1">
-              <Projects />
-            </div>
-            <div className="order-3 lg:order-2">
-              <Collections />
-            </div>
-            <div className="order-4 lg:order-3">
-              <Certifications />
-            </div>
-            <div className="order-5 lg:order-4">
-              <Learning />
+          <div className="flex flex-col gap-10 sm:gap-12 lg:py-14">
+            <div>
+              <Reveal delay={0.05}>
+                <FeaturedVideo />
+              </Reveal>
             </div>
 
-            <footer className="order-6 border-t border-border pt-8 pb-4 lg:order-6">
-              <p className="font-display text-[1.5rem] leading-tight text-foreground">
-                Built late, on purpose.
-              </p>
-              <p className="mt-2 max-w-[42ch] text-[13px] leading-[1.7] text-muted-foreground">
-                Designed and coded by {site.person.shortName}. React, TypeScript, Tailwind — no
-                template, no builder.
-              </p>
-              <p className="mt-6 font-mono text-[10.5px] tracking-[0.14em] text-muted-foreground uppercase">
-                © {new Date().getFullYear()} {site.person.name}
+            <div>
+              <Reveal delay={0.1}>
+                <Collections />
+              </Reveal>
+            </div>
+
+            <div>
+              <Reveal delay={0.15}>
+                <Social />
+              </Reveal>
+            </div>
+
+            <footer className="border-t border-border pt-8 pb-4">
+              <p className="font-display text-[1.35rem] leading-tight text-foreground sm:text-[1.5rem]">
+                Built with care by Prem.
               </p>
             </footer>
           </div>

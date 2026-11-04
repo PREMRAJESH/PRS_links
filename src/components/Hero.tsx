@@ -1,39 +1,29 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ArrowUpRight, Copy, Check, Flame, Sparkles } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 // Square 320px crop of the uploaded portrait — the original is 1.9 MB.
 import avatarImage from '../assets/pfp.png'
 import { site } from '../data/site'
-import { mostVisitedCard, track } from '../lib/analytics'
+import { mostVisitedCard } from '../lib/analytics'
 import { TrackedLink } from './primitives'
-
-const ROLE_INTERVAL = 2600
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0)
-  const [copied, setCopied] = useState(false)
   const reduced = useReducedMotion()
   const { person } = site
 
   useEffect(() => {
     const id = setInterval(
       () => setRoleIndex((i) => (i + 1) % person.roles.length),
-      ROLE_INTERVAL,
+      2600,
     )
     return () => clearInterval(id)
   }, [person.roles.length])
 
-  const copyEmail = async () => {
-    await navigator.clipboard.writeText('sargarapremrajesh@gmail.com')
-    track('email_copied')
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1800)
-  }
-
   return (
     <header className="relative">
       <div className="flex items-start gap-5 sm:gap-7">
-        {/* Avatar with a slow orbiting halo */}
+        {/* Avatar with slow orbiting halo and live status indicator */}
         <div className="relative shrink-0">
           <span
             aria-hidden
@@ -61,23 +51,27 @@ export default function Hero() {
             fetchPriority="high"
             className="relative block size-[84px] rounded-full border border-white/20 bg-[#0d1330] object-cover sm:size-[104px]"
           />
+
+          {/* Status badge */}
+          {person.status && (
+            <span
+              className="absolute bottom-0 right-0 z-10 flex size-4 items-center justify-center rounded-full bg-[#0d1330] ring-2 ring-[#0d1330]"
+              title={person.status.label}
+              aria-label={person.status.label}
+            >
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex size-2.5 rounded-full bg-emerald-400" />
+            </span>
+          )}
         </div>
 
-        <div className="min-w-0 pt-1">
-          <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-white/[0.04] px-3 py-1 font-mono text-[10.5px] tracking-[0.14em] text-secondary-foreground uppercase">
-            <span className="relative flex size-[6px]">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-70" />
-              <span className="relative inline-flex size-[6px] rounded-full bg-accent" />
-            </span>
-            {person.status.label}
-          </p>
-
-          <h1 className="font-display text-[2.6rem] leading-[0.95] tracking-[-0.015em] text-foreground sm:text-[3.4rem]">
+        <div className="min-w-0 pt-0.5">
+          <h1 className="font-display text-[2.5rem] leading-[0.95] tracking-[-0.015em] text-foreground sm:text-[3.4rem]">
             {person.name}
           </h1>
 
           {/* Rotating role, height-locked so nothing below shifts */}
-          <div className="mt-2 h-6 overflow-hidden">
+          <div className="mt-1.5 h-6 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.p
                 key={roleIndex}
@@ -92,77 +86,54 @@ export default function Hero() {
               </motion.p>
             </AnimatePresence>
           </div>
+
+          <p className="mt-1 text-[14.5px] leading-[1.65] text-secondary-foreground sm:text-[15px] sm:leading-[1.7]">
+            {person.subtitle}
+          </p>
         </div>
       </div>
 
-      <p className="mt-7 max-w-[46ch] text-[15.5px] leading-[1.7] text-secondary-foreground">
-        {person.intro}
-      </p>
-
-      <p className="mt-4 font-mono text-[11px] tracking-[0.12em] text-muted-foreground">
-        {person.location}
-      </p>
-
-      <div className="mt-8 flex flex-wrap items-center gap-3">
-        <TrackedLink
-          href={site.featured.href}
-          event="cta_click"
-          meta={{ cta: 'featured_roadmap' }}
-          className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-[13.5px] font-medium text-primary-foreground transition-transform duration-300 hover:-translate-y-0.5"
-        >
-          Start the roadmap
-          <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </TrackedLink>
-
-        <button
-          type="button"
-          onClick={copyEmail}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-white/[0.04] px-5 py-3 text-[13.5px] text-secondary-foreground transition-colors duration-300 hover:border-[rgba(173,186,255,0.34)] hover:text-foreground"
-        >
-          {copied ? <Check className="size-4 text-accent" /> : <Copy className="size-4" />}
-          {copied ? 'Copied to clipboard' : 'Copy email'}
-        </button>
-      </div>
-
-      <FeaturedResource />
+      {/* Featured Roadmap - Curated Microsoft Learn Collection */}
+      <FeaturedRoadmap />
     </header>
   )
 }
 
 /**
- * The gravity well of the page. Everything else is a flat glass panel; this one
- * gets a live gradient border, a breathing glow, and badges — so the eye lands
- * here first without any single element shouting.
+ * Featured Roadmap - Curated flagship resource with signature smooth rounded card styling
  */
-function FeaturedResource() {
-  const { featured } = site
+function FeaturedRoadmap() {
   const reduced = useReducedMotion()
+  const featured = site.featured
   const [isMostVisited, setIsMostVisited] = useState(false)
 
-  // Read after mount so the badge reflects real recorded behaviour, not a guess.
   useEffect(() => setIsMostVisited(mostVisitedCard() === 'featured_roadmap'), [])
 
   return (
     <section
-      aria-labelledby="featured-title"
-      className="relative mt-12 lg:-mx-4 xl:-mx-6"
+      aria-labelledby="featured-roadmap-title"
+      className="relative mt-7 sm:mt-10 lg:-mx-4 xl:-mx-6"
     >
       {/* Outer breathing glow */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -inset-6 rounded-[36px] blur-2xl"
+        className="pointer-events-none absolute -inset-6 blur-2xl"
         style={{
+          borderRadius: '36px',
           background:
             'radial-gradient(60% 60% at 50% 40%, rgba(125,224,208,0.16), rgba(139,157,255,0.14) 55%, transparent 78%)',
           animation: reduced ? undefined : 'breathe 7s ease-in-out infinite',
         }}
       />
 
-      {/* Animated gradient border: a rotating conic sheet clipped to a 1px ring */}
-      <div className="relative rounded-[24px] p-px">
+      <div
+        className="relative p-px"
+        style={{ borderRadius: '28px' }}
+      >
         <span
           aria-hidden
-          className="absolute inset-0 overflow-hidden rounded-[24px]"
+          className="absolute inset-0 overflow-hidden"
+          style={{ borderRadius: '28px' }}
         >
           <span
             className="absolute left-1/2 top-1/2 aspect-square w-[160%] -translate-x-1/2 -translate-y-1/2"
@@ -175,12 +146,14 @@ function FeaturedResource() {
         </span>
 
         <div
-          className="relative overflow-hidden rounded-[23px] bg-[rgba(14,19,38,0.72)] p-7 backdrop-blur-2xl sm:p-9"
+          className="relative overflow-hidden bg-[rgba(14,19,38,0.72)] p-6 backdrop-blur-2xl sm:p-9"
           style={{
+            borderRadius: '27px',
             boxShadow:
               '0 1px 0 0 rgba(255,255,255,0.10) inset, 0 40px 90px -40px rgba(4,7,20,0.95)',
           }}
         >
+          {/* Subtle cyan accent glow in top corner */}
           <span
             aria-hidden
             className="pointer-events-none absolute -right-28 -top-28 size-72 rounded-full blur-3xl"
@@ -191,12 +164,10 @@ function FeaturedResource() {
 
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-mono text-[9.5px] font-medium tracking-[0.16em] text-accent-foreground uppercase">
-              <Sparkles className="size-3" />
               Featured
             </span>
             {isMostVisited && (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(255,178,120,0.4)] bg-[rgba(255,150,80,0.12)] px-2.5 py-1 font-mono text-[9.5px] tracking-[0.16em] text-[#ffc79a] uppercase">
-                <Flame className="size-3" />
                 Most visited
               </span>
             )}
@@ -206,22 +177,24 @@ function FeaturedResource() {
           </div>
 
           <h2
-            id="featured-title"
-            className="mt-4 font-display text-[2.35rem] leading-[1.02] tracking-[-0.015em] sm:text-[3rem]"
+            id="featured-roadmap-title"
+            className="mt-4 font-display text-[2.2rem] leading-[1.02] tracking-[-0.015em] sm:text-[2.8rem] lg:text-[3rem]"
           >
             {featured.title}
           </h2>
-          <p className="mt-4 max-w-[52ch] text-[15px] leading-[1.7] text-secondary-foreground">
+          <p className="mt-4 max-w-[52ch] text-[14.5px] leading-[1.65] text-secondary-foreground sm:text-[15px] sm:leading-[1.7]">
             {featured.description}
           </p>
 
-          <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-border pt-6 sm:grid-cols-4">
-            {featured.meta.map((m) => (
-              <div key={m.label}>
+          <dl className="mt-7 grid grid-cols-2 gap-x-5 gap-y-4 border-t border-border pt-6 sm:grid-cols-4 sm:gap-x-6">
+            {featured.meta.map((item) => (
+              <div key={item.label}>
                 <dt className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase">
-                  {m.label}
+                  {item.label}
                 </dt>
-                <dd className="mt-1.5 text-[14px] text-foreground">{m.value}</dd>
+                <dd className="mt-1.5 text-[14px] text-foreground">
+                  {item.value}
+                </dd>
               </div>
             ))}
           </dl>
@@ -232,7 +205,6 @@ function FeaturedResource() {
             meta={{ card: 'featured_roadmap' }}
             className="group relative mt-8 flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-full bg-primary px-7 py-4 text-[15px] font-medium text-primary-foreground transition-transform duration-300 hover:-translate-y-0.5 active:translate-y-0"
           >
-            {/* Sheen sweep on hover */}
             <span
               aria-hidden
               className="absolute inset-y-0 -left-full w-1/2 skew-x-[-20deg] bg-white/35 blur-md transition-transform duration-700 ease-out group-hover:translate-x-[320%]"
